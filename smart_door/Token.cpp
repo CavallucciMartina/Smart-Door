@@ -1,7 +1,8 @@
 #include "Token.h"
+#include "config.h"
 
 Token::Token(){
-  state = "TOKEN_AUTENTICATION";
+  state = AUTENTICATION_STATE;
 }
 
 String Token::getState(){

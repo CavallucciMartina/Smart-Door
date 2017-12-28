@@ -2,25 +2,39 @@
 #include "MsgService.h"
 #include "MsgBtService.h"
 #include "AutenticationTask.h"
+#include "EnteringTask.h"
+#include "CloseTask.h"
 #include "Token.h"
+#include "config.h"
 
 Scheduler sched;
-
+Servo servo;
 
 void setup(){
   Serial.begin(9600);
   while (!Serial){}
-  
-  MsgBtService *msg = new MsgBtService(2,3);
+
+  servo.attach(SERVO_PIN);
+
+  MsgBtService *msg = new MsgBtService(TX_PIN,RX_PIN);
   msg->init();
   Token *token = new Token();
   
-  sched.init(100);
+  sched.init(90);
   MsgService.init();
   
   AutenticationTask* autenticationTask = new AutenticationTask(token, msg);
-  autenticationTask->init(100);
+  autenticationTask->init(90);
   sched.addTask(autenticationTask);
+
+  EnteringTask* enteringTask = new EnteringTask(token, msg, servo);
+  enteringTask->init(90);
+  sched.addTask(enteringTask);
+
+  CloseTask* closeTask = new CloseTask(token, servo);
+  closeTask->init(90);
+  sched.addTask(closeTask);
+  
 }
 
 void loop(){

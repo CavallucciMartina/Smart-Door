@@ -19,7 +19,7 @@ private:
   ProximitySensor* prox;
   Led* ledOn;
   MsgBtService* msgBtService;
-  enum { IDLE, USR, PWD } state;
+  enum {IDLE, USR, PWD} state;
 };
 
 #endif

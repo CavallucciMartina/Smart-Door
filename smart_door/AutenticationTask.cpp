@@ -9,8 +9,6 @@
 #define MSG_DISTANCE "DIST: "
 #define MSG_VALID "VALID: OK"
 #define MSG_INVALID "VALID: KO"
-#define THIS_TOKEN "TOKEN_AUTENTICATION"
-#define TOKEN_OPEN "TOKEN_OPENING"
 #define MSG_WELCOME "WELCOME"
 #define MSG_DENIED "RETRY"
 
@@ -30,7 +28,7 @@ void AutenticationTask::init(int period){
 }
   
 void AutenticationTask::tick(){
-  if (token->getState() == THIS_TOKEN) {
+  if (token->getState() == AUTENTICATION_STATE) {
     switch (state){
     
       case IDLE: {
@@ -42,7 +40,11 @@ void AutenticationTask::tick(){
          delete msg;
         } else {
           double value = prox->getDistance();
-          msgBtService->sendMsg(Msg(MSG_DISTANCE + String(value)));
+          /*
+           * sendMsg on a MsgBtService istance cause an interference with Servo.h if it's called frequently.
+           * Servo probably would breake because it moves back and forward continuosly in un unusual way.
+           */
+          //msgBtService->sendMsg(Msg(MSG_DISTANCE + String(value)));
         }
         break;      
       }
@@ -64,7 +66,7 @@ void AutenticationTask::tick(){
           const String& validation = msg->getContent();
           if (validation.equals(MSG_VALID)) {
             msgBtService->sendMsg(Msg(MSG_WELCOME));
-            token->setState(TOKEN_OPEN);
+            token->setState(OPEN_STATE);
             state = IDLE;
           } else if (validation.equals(MSG_INVALID)) {
             msgBtService->sendMsg(Msg(MSG_DENIED));
