@@ -8,7 +8,7 @@
 #define MSG_END "END"
 #define MSG_ASK_TEMP "TEMP?"
 #define MSG_SEND_TEMP "TEMP: "
-#define MSG_SET_VALUE "SET V: "
+#define MSG_SET_VALUE "SET:"
 #define MSG_ASK_VALUE "VALUE?"
 #define MSG_LED_VALUE "LED VALUE: "
 
@@ -34,15 +34,17 @@ void WorkingTask::tick(){
         if (msgBtService->isMsgAvailable()){
           Msg* msg = msgBtService->receiveMsg();
           const String& message = msg->getContent();
+          MsgService.sendMsg(message);
           if (message == MSG_ASK_TEMP) {
             int value = temp->readTemperature();
             msgBtService->sendMsg(Msg(MSG_SEND_TEMP + String(value)));
-          } else if (message.substring(0) == MSG_SET_VALUE) {
-            ledValue->switchOn();
-            message.remove(0, 7);
-            if (message == "ON") {
+          } else if (message.startsWith(MSG_SET_VALUE)) {
+            String value = message; 
+            value.remove(0, 4);
+            MsgService.sendMsg(value);
+            if (value == "ON") {
               ledValue->switchOn();
-            } else if (message == "OFF"){
+            } else if (value == "OFF"){
               ledValue->switchOff();
             }
           } else if (message == MSG_END || buttonEnd->isPressed()){
