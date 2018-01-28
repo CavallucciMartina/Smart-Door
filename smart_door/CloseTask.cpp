@@ -1,5 +1,5 @@
 #include "CloseTask.h"
-#include "config.h"
+#include "Config.h"
 #include "Logger.h"
 
 #define CLOSE_DEG 0
@@ -23,7 +23,10 @@ void CloseTask::tick(){
       case CLOSING: {
         doorClosingTime += myPeriod;
         if (token->getState() == CLOSE_STATE) {
-          servo.write(CLOSE_DEG);
+          /*
+          * For the moment the engine is broken.
+          */
+          /*servo.write(CLOSE_DEG);*/
         }
         if (doorClosingTime >= DOOR_DURATION){
           token->setState(AUTENTICATION_STATE); 

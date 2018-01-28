@@ -1,6 +1,6 @@
 #include "AutenticationTask.h"
 #include "Sonar.h"
-#include "config.h"
+#include "Config.h"
 #include "MsgService.h"
 #include "Logger.h"
 
@@ -44,7 +44,8 @@ void AutenticationTask::tick(){
            * sendMsg on a MsgBtService istance cause an interference with Servo.h if it's called frequently.
            * Servo probably would breake because it moves back and forward continuosly in un unusual way.
            */
-          //msgBtService->sendMsg(Msg(MSG_DISTANCE + String(value)));
+          delay(50);
+          msgBtService->sendMsg(Msg(MSG_DISTANCE + String(value)));
         }
         break;      
       }

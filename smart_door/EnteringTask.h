@@ -1,5 +1,3 @@
-#include <SoftwareServo.h>
-
 #ifndef __ENTERING_TASK__
 #define __ENTERING_TASK__
 

@@ -1,6 +1,6 @@
 #include "EnteringTask.h"
 #include "Presence.h"
-#include "config.h"
+#include "Config.h"
 #include "MsgService.h"
 #include "Logger.h"
 
@@ -21,9 +21,12 @@ void EnteringTask::init(int period){
   state = OPENING;
   doorOpeningTime = 0;
   arrivalTime = 0;
-  servo.write(CLOSE_DEG);
+  /*
+   * For the moment the engine is broken.
+   */
+  /*servo.write(CLOSE_DEG);
   delay(50);
-  Logger.log("ET:INIT");
+  Logger.log("ET:INIT");*/
 }
   
 void EnteringTask::tick(){
