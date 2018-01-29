@@ -16,7 +16,7 @@
 #define CLOSE_STATE "CL_S"
 #define WORKING_STATE "WR_S"
 
-#define DOOR_DURATION 1800
+#define DOOR_DURATION 2000
 #define MAX_DELAY 10000
 
 #endif

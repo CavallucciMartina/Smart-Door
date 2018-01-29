@@ -15,29 +15,32 @@ void setup(){
   Serial.begin(9600);
   while (!Serial){}
 
-  servo.attach(SERVO_PIN);
-
   MsgBtService *msg = new MsgBtService(TX_PIN,RX_PIN);
   msg->init();
   Token *token = new Token();
+
+  servo.attach(SERVO_PIN);
+  servo.write(0);
+  delay(1000);
+  servo.detach();
   
-  sched.init(90);
+  sched.init(100);
   MsgService.init();
   
   AutenticationTask* autenticationTask = new AutenticationTask(token, msg);
-  autenticationTask->init(90);
+  autenticationTask->init(100);
   sched.addTask(autenticationTask);
 
   EnteringTask* enteringTask = new EnteringTask(token, msg, servo);
-  enteringTask->init(90);
+  enteringTask->init(100);
   sched.addTask(enteringTask);
 
   CloseTask* closeTask = new CloseTask(token, servo);
-  closeTask->init(90);
+  closeTask->init(100);
   sched.addTask(closeTask);
 
   WorkingTask* workingTask = new WorkingTask(token, msg);
-  workingTask->init(90);
+  workingTask->init(100);
   sched.addTask(workingTask);
   
 }

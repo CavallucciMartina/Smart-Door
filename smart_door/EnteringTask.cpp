@@ -2,9 +2,8 @@
 #include "Presence.h"
 #include "Config.h"
 #include "MsgService.h"
-#include "Logger.h"
 
-#define OPEN_DEG 165
+#define OPEN_DEG 175 // Not 180 degrees becouse servo could go over the end of its run
 #define CLOSE_DEG 0
 #define MSG_OPEN_OK "OPEN: OK"
 #define MSG_OPEN_KO "OPEN: KO - TIME EXPIRED"
@@ -21,12 +20,6 @@ void EnteringTask::init(int period){
   state = OPENING;
   doorOpeningTime = 0;
   arrivalTime = 0;
-  /*
-   * For the moment the engine is broken.
-   */
-  /*servo.write(CLOSE_DEG);
-  delay(50);
-  Logger.log("ET:INIT");*/
 }
   
 void EnteringTask::tick(){
@@ -36,11 +29,14 @@ void EnteringTask::tick(){
       case OPENING: {
         doorOpeningTime += myPeriod;
         arrivalTime += myPeriod;
+        servo.attach(SERVO_PIN);
         servo.write(OPEN_DEG);
+        delay(500); // Time to wait the servo to move from 0 to 175 degrees
+        servo.detach();
         if (doorOpeningTime >= DOOR_DURATION){
+          doorOpeningTime =  0;
           state = OPEN;
         }
-        
         break;
       }
     

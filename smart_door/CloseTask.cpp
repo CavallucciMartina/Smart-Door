@@ -1,6 +1,5 @@
 #include "CloseTask.h"
 #include "Config.h"
-#include "Logger.h"
 
 #define CLOSE_DEG 0
 
@@ -13,7 +12,6 @@ void CloseTask::init(int period){
   Task::init(period);
   state = CLOSING;
   doorClosingTime = 0;
-  Logger.log("CT:INIT");
 }
   
 void CloseTask::tick(){
@@ -23,12 +21,13 @@ void CloseTask::tick(){
       case CLOSING: {
         doorClosingTime += myPeriod;
         if (token->getState() == CLOSE_STATE) {
-          /*
-          * For the moment the engine is broken.
-          */
-          /*servo.write(CLOSE_DEG);*/
+          servo.attach(SERVO_PIN);
+          servo.write(CLOSE_DEG); 
+          delay(500); //Time to wait the servo to move from 175 to 0 degree
+          servo.detach();
         }
         if (doorClosingTime >= DOOR_DURATION){
+          doorClosingTime =  0;
           token->setState(AUTENTICATION_STATE); 
         }
         break;
