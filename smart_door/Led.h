@@ -8,10 +8,8 @@ public:
   Led(int pin);
   void switchOn();
   void switchOff(); 
-  bool getStatus();   
 protected:
   int pin;
-  bool ledStatus; 
 };
 
 #endif

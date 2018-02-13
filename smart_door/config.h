@@ -11,12 +11,11 @@
 #define TX_PIN 2
 #define RX_PIN 3
 
-#define AUTENTICATION_STATE "AU_S"
-#define OPEN_STATE "OP_S"
-#define CLOSE_STATE "CL_S"
-#define WORKING_STATE "WR_S"
-
 #define DOOR_DURATION 2000
 #define MAX_DELAY 10000
+#define MIN_DIST 0.8
+#define MIN_SEC 1
+#define CLOSE_DEG 0
+#define OPEN_DEG 175
 
 #endif

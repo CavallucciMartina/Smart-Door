@@ -1,11 +1,11 @@
 #include "Scheduler.h"
 #include "MsgService.h"
 #include "MsgBtService.h"
-#include "AutenticationTask.h"
-#include "EnteringTask.h"
-#include "CloseTask.h"
-#include "WorkingTask.h"
-#include "Token.h"
+#include "BtCommTask.h"
+#include "SerialCommTask.h"
+#include "DoorTask.h"
+#include "InformationTask.h"
+#include "Door.h"
 #include "Config.h"
 
 Scheduler sched;
@@ -17,7 +17,9 @@ void setup(){
 
   MsgBtService *msg = new MsgBtService(TX_PIN,RX_PIN);
   msg->init();
-  Token *token = new Token();
+  Door* pDoor = new Door(msg);
+  TempSensor* temp = new TempSensor();
+  LedExt* ledValue = new LedExt(LED_VALUE_PIN);
 
   servo.attach(SERVO_PIN);
   servo.write(0);
@@ -27,21 +29,23 @@ void setup(){
   sched.init(100);
   MsgService.init();
   
-  AutenticationTask* autenticationTask = new AutenticationTask(token, msg);
-  autenticationTask->init(100);
-  sched.addTask(autenticationTask);
+  BtCommTask* btCommTask = new BtCommTask(pDoor, msg);
+  btCommTask->init(100);
+  sched.addTask(btCommTask);
 
-  EnteringTask* enteringTask = new EnteringTask(token, msg, servo);
-  enteringTask->init(100);
-  sched.addTask(enteringTask);
+  SerialCommTask* serialCommTask = new SerialCommTask(pDoor);
+  serialCommTask->init(100);
+  sched.addTask(serialCommTask);
 
-  CloseTask* closeTask = new CloseTask(token, servo);
-  closeTask->init(100);
-  sched.addTask(closeTask);
+  DoorTask* doorTask = new DoorTask(pDoor, ledValue, temp, servo);
+  doorTask->init(100);
+  sched.addTask(doorTask);
 
-  WorkingTask* workingTask = new WorkingTask(token, msg);
-  workingTask->init(100);
-  sched.addTask(workingTask);
+  InformationTask* informationTask = new InformationTask(pDoor, temp, ledValue);
+  informationTask->init(100);
+  sched.addTask(informationTask);
+
+  delay(1000);
   
 }
 
